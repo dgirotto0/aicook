@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1054320699243",
+    "project_id": "receitaapp-9b088",
+    "storage_bucket": "receitaapp-9b088.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1054320699243:android:3a62708b04474564e54e2e",
+        "android_client_info": {
+          "package_name": "com.example.receitaApp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1054320699243-qn4hfe3r6mieecr1tkbs2g2nqfuohj60.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.receitaApp",
+            "certificate_hash": "4c7788c7e60c6dba2182cb564031d6b0aae9d38f"
+          }
+        },
+        {
+          "client_id": "1054320699243-d1m4mta500kdgi40pcs7vkkv9me8nqco.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAdtMZ4Fw-fWm2Q63cBfnD8PkJ-nHRDRZA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1054320699243-d1m4mta500kdgi40pcs7vkkv9me8nqco.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
