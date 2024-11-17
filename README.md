@@ -17,7 +17,20 @@ AICook is your personal kitchen assistant! 🥗 It suggests personalized recipes
 
 ## 📸 Screenshots
 
-*(Add your app screenshots here, showcasing different screens and features.)*
+<p align="center">
+  <img src="screenshots/welcome_page.png" alt="Welcome Page" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/login_page.png" alt="Login Page" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/register_page.png" alt="Register Page" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/home_page.png" alt="Home Page" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/ocasion_screen.png" alt="Ocasion Screen" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/number_of_people_screen.png" alt="Number of People Screen" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/meal_type_screen.png" alt="Meal Type Screen" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/ingredients_screen.png" alt="Ingredients Screen" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/appliance_screen.png" alt="Appliance Screen" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/loading_page.png" alt="Loading Page" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/recipe_page.png" alt="Recipe Page" width="200" style="border-radius: 15px; margin: 10px;">
+  <img src="screenshots/profile_page.png" alt="Profile Page" width="200" style="border-radius: 15px; margin: 10px;">
+</p>
 
 ## 🚀 Usage
 
