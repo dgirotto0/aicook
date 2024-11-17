@@ -1,27 +1,29 @@
 import 'dart:convert';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 
 class ImageService {
-  final String apiKey = dotenv.env['API_KEY_IMAGE']!;
-  final String apiUrl = 'https://api.unsplash.com/search/photos';
+  final String apiUrl = 'https://lexica.art/api/v1/search?q=';
 
   Future<String?> fetchImage(String query) async {
-    final refinedQuery = '$query food dish cuisine';
+    try {
+      final response = await http.get(
+        Uri.parse('$apiUrl$query'),
+      );
 
-    final response = await http.get(
-      Uri.parse('$apiUrl?query=$refinedQuery&client_id=$apiKey&per_page=1'),
-    );
-
-    if (response.statusCode == 200) {
-      final data = json.decode(response.body);
-      if (data['results'].isNotEmpty) {
-        return data['results'][0]['urls']['regular'];
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final results = data['images'];
+        if (results.isNotEmpty) {
+          return results[0]['src']; // Retorna o URL da imagem
+        }
+      } else {
+        print('Erro ao buscar imagem: ${response.statusCode}');
       }
-    } else {
-      print('Erro ao buscar imagem: ${response.statusCode}');
+      return null;
+
+    } catch (e) {
+      print('Erro ao buscar imagem: $e');
+      return null;
     }
-    return null;
   }
 }
-

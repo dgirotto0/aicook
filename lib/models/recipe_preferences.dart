@@ -1,5 +1,3 @@
-// lib/models/recipe_preferences.dart
-
 import 'package:flutter/foundation.dart';
 
 class RecipePreferences with ChangeNotifier {
@@ -10,16 +8,39 @@ class RecipePreferences with ChangeNotifier {
   Set<String> selectedAppliances = {};
   bool isAnyAppliance = false;
 
-  // Método para atualizar os ingredientes selecionados
+  void updateOccasion(String newOccasion) {
+    occasion = newOccasion;
+    notifyListeners();
+  }
+
+  void updateMealType(String type) {
+    mealType = type;
+    notifyListeners();
+  }
+
+  void updateNumberOfPeople(int people) {
+    numberOfPeople = people;
+    notifyListeners();
+  }
+
   void updateSelectedIngredients(Map<String, Set<String>> ingredients) {
     selectedIngredients = ingredients;
     notifyListeners();
   }
 
-  // Método para atualizar os eletrodomésticos selecionados
   void updateSelectedAppliances(Set<String> appliances, bool anyAppliance) {
     selectedAppliances = appliances;
     isAnyAppliance = anyAppliance;
+    notifyListeners();
+  }
+
+  void resetPreferences() {
+    occasion = null;
+    numberOfPeople = 1;
+    mealType = null;
+    selectedIngredients.clear();
+    selectedAppliances.clear();
+    isAnyAppliance = false;
     notifyListeners();
   }
 }

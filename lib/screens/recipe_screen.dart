@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:share_plus/share_plus.dart';
 import '../models/recipe.dart';
+import '../models/recipe_preferences.dart';
 import '../services/database_service.dart';
 import '../services/image_service.dart';
 import '../services/auth_service.dart';
@@ -36,18 +38,43 @@ class _RecipeScreenState extends State<RecipeScreen> {
     if (user != null) {
       setState(() {
         userId = user.uid;
-        _dbService.isFavorite(userId!, recipe.name).then((value) {
+        _dbService.isFavorite(userId!, recipe.name).then((value) async {
           setState(() {
             isFavorite = value;
           });
+          if (value) {
+            final favoriteRecipes = await _dbService.getFavoriteRecipes(userId!);
+            final favoriteRecipe = favoriteRecipes.firstWhere((r) => r.name == recipe.name);
+            setState(() {
+              recipeImageUrl = favoriteRecipe.imageUrl;
+            });
+          } else {
+            _fetchAndSetImage(recipe.name);
+          }
         });
       });
     } else {
       print("Erro: usuário não autenticado");
     }
+  }
 
-    recipeImageUrl = await ImageService().fetchImage(recipe.name);
-    setState(() {});
+  void _fetchAndSetImage(String recipeName) async {
+    try {
+      String? imageUrl = await ImageService().fetchImage(recipeName);
+      setState(() {
+        recipeImageUrl = imageUrl;
+      });
+
+      if (isFavorite && userId != null) {
+        final Recipe recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
+        await _dbService.saveFavoriteRecipe(userId!, recipe, imageUrl!);
+      }
+    } catch (e) {
+      print("Erro ao buscar imagem: $e");
+      setState(() {
+        recipeImageUrl = 'assets/replace.png';
+      });
+    }
   }
 
   void toggleFavorite() async {
@@ -62,7 +89,7 @@ class _RecipeScreenState extends State<RecipeScreen> {
 
     final Recipe recipe = ModalRoute.of(context)!.settings.arguments as Recipe;
     if (isFavorite) {
-      await _dbService.saveFavoriteRecipe(userId!, recipe);
+      await _dbService.saveFavoriteRecipe(userId!, recipe, recipeImageUrl!);
     } else {
       await _dbService.removeFavoriteRecipe(userId!, recipe.name);
     }
@@ -107,8 +134,9 @@ ${recipe.instructions.join('\n')}
               children: [
                 OutlinedButton(
                   onPressed: () {
+                    Provider.of<RecipePreferences>(context, listen: false).resetPreferences();
                     Navigator.pop(context);
-                    Navigator.pushReplacementNamed(context, '/loading');
+                    Navigator.pushNamedAndRemoveUntil(context, '/meal_type', (route) => false);
                   },
                   style: OutlinedButton.styleFrom(
                     side: const BorderSide(color: CustomColors.primaryColor, width: 1.5),
@@ -211,6 +239,7 @@ ${recipe.instructions.join('\n')}
               OutlinedButton(
                 onPressed: () => Navigator.pop(context),
                 style: OutlinedButton.styleFrom(
+                  backgroundColor: CustomColors.primaryColor,
                   side: const BorderSide(color: CustomColors.primaryColor, width: 1.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
@@ -220,7 +249,7 @@ ${recipe.instructions.join('\n')}
                 child: const Text(
                   'Não',
                   style: TextStyle(
-                    color: CustomColors.primaryColor,
+                    color: CustomColors.backgroundColor,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -231,7 +260,8 @@ ${recipe.instructions.join('\n')}
                   Navigator.pushNamed(context, '/profile');
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: CustomColors.primaryColor,
+                  backgroundColor: CustomColors.backgroundColor,
+                  side: const BorderSide(color: CustomColors.primaryColor, width: 1.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                   ),
@@ -239,7 +269,7 @@ ${recipe.instructions.join('\n')}
                 ),
                 child: const Text(
                   'Sim',
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: CustomColors.primaryColor),
                 ),
               ),
             ],

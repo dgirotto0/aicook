@@ -20,12 +20,7 @@ Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   await dotenv.load(fileName: ".env");
-  runApp(
-    ChangeNotifierProvider(
-      create: (_) => RecipePreferences(),
-      child: const ReceitaApp(),
-    ),
-  );
+  runApp(const ReceitaApp());
 }
 
 class ReceitaApp extends StatelessWidget {
@@ -33,36 +28,39 @@ class ReceitaApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'ReceitaApp',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        primaryColor: Colors.grey[800],
-        hintColor: Colors.greenAccent[400],
-        scaffoldBackgroundColor: Colors.grey[200],
-        fontFamily: 'Roboto',
-        textTheme: TextTheme(
-          bodyLarge: TextStyle(color: Colors.grey[900]),
-          bodyMedium: TextStyle(color: Colors.grey[800]),
+    return ChangeNotifierProvider(
+      create: (_) => RecipePreferences(),
+      child: MaterialApp(
+        title: 'ReceitaApp',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primaryColor: Colors.grey[800],
+          hintColor: Colors.greenAccent[400],
+          scaffoldBackgroundColor: Colors.grey[200],
+          fontFamily: 'Roboto',
+          textTheme: TextTheme(
+            bodyLarge: TextStyle(color: Colors.grey[900]),
+            bodyMedium: TextStyle(color: Colors.grey[800]),
+          ),
         ),
+        initialRoute: '/',
+        routes: {
+          '/': (context) => const WelcomeScreen(),
+          '/login': (context) => LoginScreen(),
+          '/home': (context) => const HomeScreen(),
+          '/occasion': (context) => const OccasionScreen(),
+          '/people': (context) => const PeopleScreen(),
+          '/meal_type': (context) => const MealTypeScreen(),
+          '/ingredients_selection': (context) =>
+          const IngredientsSelectionScreen(),
+          '/appliances_selection': (context) => const AppliancesSelectionScreen(),
+          '/loading': (context) => const LoadingScreen(),
+          '/recipe': (context) => const RecipeScreen(),
+          '/profile': (context) => const ProfileScreen(),
+          '/register': (context) => RegistrationScreen(),
+          '/favorites': (context) => const RecipeScreen(),
+        },
       ),
-      initialRoute: '/',
-      routes: {
-        '/': (context) => const WelcomeScreen(),
-        '/login': (context) => LoginScreen(),
-        '/home': (context) => const HomeScreen(),
-        '/occasion': (context) => const OccasionScreen(),
-        '/people': (context) => const PeopleScreen(),
-        '/meal_type': (context) => const MealTypeScreen(),
-        '/ingredients_selection': (context) =>
-            const IngredientsSelectionScreen(),
-        '/appliances_selection': (context) => const AppliancesSelectionScreen(),
-        '/loading': (context) => const LoadingScreen(),
-        '/recipe': (context) => const RecipeScreen(),
-        '/profile': (context) => const ProfileScreen(),
-        '/register': (context) => RegistrationScreen(),
-        '/favorites': (context) => const RecipeScreen(),
-      },
     );
   }
 }

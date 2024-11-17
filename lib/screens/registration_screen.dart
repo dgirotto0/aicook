@@ -36,34 +36,34 @@ class RegistrationScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildAppleSignInButton(BuildContext context) {
-    return ElevatedButton.icon(
-      icon: const Icon(Icons.apple, size: 24),
-      label: const Text(
-        'Registrar com Apple',
-        style: TextStyle(color: Colors.white, fontSize: 16),
-      ),
-      style: ElevatedButton.styleFrom(
-        foregroundColor: Colors.white,
-        backgroundColor: Colors.black,
-        minimumSize: const Size(double.infinity, 50),
-        side: const BorderSide(color: Colors.black),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(30),
-        ),
-      ),
-      onPressed: () async {
-        final user = await _authService.signInWithApple();
-        if (user != null) {
-          Navigator.pushReplacementNamed(context, '/home');
-        } else {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Falha no registro com Apple. Tente novamente.')),
-          );
-        }
-      },
-    );
-  }
+  // Widget _buildAppleSignInButton(BuildContext context) {
+  //   return ElevatedButton.icon(
+  //     icon: const Icon(Icons.apple, size: 24),
+  //     label: const Text(
+  //       'Registrar com Apple',
+  //       style: TextStyle(color: Colors.white, fontSize: 16),
+  //     ),
+  //     style: ElevatedButton.styleFrom(
+  //       foregroundColor: Colors.white,
+  //       backgroundColor: Colors.black,
+  //       minimumSize: const Size(double.infinity, 50),
+  //       side: const BorderSide(color: Colors.black),
+  //       shape: RoundedRectangleBorder(
+  //         borderRadius: BorderRadius.circular(30),
+  //       ),
+  //     ),
+  //     onPressed: () async {
+  //       final user = await _authService.signInWithApple();
+  //       if (user != null) {
+  //         Navigator.pushReplacementNamed(context, '/home');
+  //       } else {
+  //         ScaffoldMessenger.of(context).showSnackBar(
+  //           const SnackBar(content: Text('Falha no registro com Apple. Tente novamente.')),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 
   Widget _buildFooter(BuildContext context) {
     return Row(
@@ -102,8 +102,8 @@ class RegistrationScreen extends StatelessWidget {
           ),
           const SizedBox(height: 40),
           _buildGoogleSignInButton(context),
-          const SizedBox(height: 20),
-          _buildAppleSignInButton(context),
+          // const SizedBox(height: 20),
+          // _buildAppleSignInButton(context),
           const SizedBox(height: 20),
           _buildFooter(context),
         ],

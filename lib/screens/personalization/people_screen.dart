@@ -1,7 +1,6 @@
-// lib/screens/personalization/people_screen.dart
-
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import '../../models/recipe_preferences.dart';
 import '../../utils/colors.dart';
 
 class PeopleScreen extends StatefulWidget {
@@ -115,6 +114,7 @@ class _PeopleScreenState extends State<PeopleScreen> {
         _buildOptionCard('Só para mim', isOnlyMe, () {
           setState(() {
             isOnlyMe = true;
+            numberOfPeople = 1;
           });
         }),
         _buildOptionCard('Para mais pessoas', !isOnlyMe, () {
@@ -137,11 +137,9 @@ class _PeopleScreenState extends State<PeopleScreen> {
               ),
             ),
             onPressed: () {
-              if (isOnlyMe) {
-                Navigator.pushNamed(context, '/ingredients_selection');
-              } else {
-                Navigator.pushNamed(context, '/meal_type');
-              }
+              Provider.of<RecipePreferences>(context, listen: false)
+                  .updateNumberOfPeople(numberOfPeople);
+              Navigator.pushNamed(context, '/meal_type');
             },
             child: const Text(
               'Próximo',

@@ -1,4 +1,3 @@
-// api_service.dart
 import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
@@ -46,7 +45,7 @@ class ApiService {
         print("Erro ao decodificar JSON: $e");
         if (kDebugMode) {
           print("JSON recebido: \n($recipeText)");
-        } // Imprima o JSON que causou o erro
+        }
         return null;
       }
     } catch (e) {
@@ -55,28 +54,35 @@ class ApiService {
     }
   }
 
-  // Método para construir o prompt da API Gemini
   String _buildPrompt(Map<String, dynamic> requestData) {
     final ingredientsList = requestData['ingredients'] ?? [];
     final peopleCount = requestData['numberOfPeople'] ?? 1;
     final occasion = requestData['occasion'] ?? 'um prato comum';
+    final mealType = requestData['mealType'] ?? 'desconhecido';
     final appliancesList = requestData['appliances'] ?? [];
     final appliances = appliancesList.isNotEmpty
         ? appliancesList.join(', ')
         : 'nenhum eletrodoméstico específico';
+
+    print('Meal Type no _buildPrompt: $mealType');
 
     String ingredientsPrompt;
 
     if (ingredientsList.isEmpty) {
       ingredientsPrompt = 'usando ingredientes comuns disponíveis em casa';
     } else {
-      ingredientsPrompt = 'com os seguintes ingredientes: ${ingredientsList.join(', ')}';
+      ingredientsPrompt =
+      'com os seguintes ingredientes: ${ingredientsList.join(', ')}';
     }
 
     return '''
-Por favor, sugira uma receita $ingredientsPrompt.
-A receita é para $peopleCount pessoa(s) e deve ser adequada para $occasion.
-Considere que os eletrodomésticos disponíveis são: $appliances.
+Por favor, sugira uma receita considerando os ingredientes disponíveis listados em $ingredientsPrompt, 
+mas não é necessário usar todos. Escolha ingredientes que combinem e criem uma receita coerente e realista. 
+O nome da receita deve ser suficientemente descritivo para identificar claramente o prato sugerido.
+A receita deve ser para $peopleCount pessoa(s) e adequada para $occasion. 
+O tipo de refeição é $mealType.
+Utilize medidas precisas, preferencialmente em gramas ou mililitros. 
+Os eletrodomésticos disponíveis são: $appliances.
 Formate a resposta APENAS em JSON, sem blocos de código ou texto adicional, no seguinte formato:
 {
   "name": "Nome da Receita",
@@ -87,7 +93,6 @@ Formate a resposta APENAS em JSON, sem blocos de código ou texto adicional, no 
 ''';
   }
 
-  // Método para extrair o JSON da resposta, removendo blocos de código e texto extra
   String _extractJsonFromResponse(String response) {
     response = response.replaceAll(RegExp(r'^```(\w+)?\n', multiLine: true), '');
     response = response.replaceAll('```', '');

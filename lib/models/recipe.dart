@@ -5,12 +5,14 @@ class Recipe {
   final String preparation_time;
   final List<String> ingredients;
   final List<String> instructions;
+  final String? imageUrl;
 
   Recipe({
     required this.name,
     required this.preparation_time,
     required this.ingredients,
     required this.instructions,
+    this.imageUrl
   });
 
   // Converte um mapa JSON em um objeto Recipe

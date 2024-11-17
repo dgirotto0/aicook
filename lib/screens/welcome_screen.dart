@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-
 import '../utils/colors.dart';
+import '../utils/fonts.dart';
 
 class WelcomeScreen extends StatefulWidget {
   const WelcomeScreen({super.key});
@@ -37,17 +37,8 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       child: Column(
         children: [
           Image.asset(
-            'assets/logo_black.png', // Certifique-se de que esse caminho está correto
-            height: 300,// A logo deve ser branca para contraste
-          ),
-          const SizedBox(height: 10),
-          const Text(
-            'AICook',
-            style: TextStyle(
-              fontSize: 32,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
+            'assets/logo_black.png',
+            height: 300,
           ),
         ],
       ),
@@ -106,6 +97,15 @@ class _WelcomeScreenState extends State<WelcomeScreen>
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         _buildLogo(),
+        Text(
+          'AICook',
+          style: TextStyle(
+            fontSize: 50,
+            fontFamily: AppFonts.bubblebodyNeue,
+            fontWeight: FontWeight.bold,
+            color: Colors.black.withOpacity(0.9),
+          ),
+        ),
         const SizedBox(height: 40),
         _buildStartButton(),
         const SizedBox(height: 20),

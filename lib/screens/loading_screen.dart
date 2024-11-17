@@ -19,9 +19,8 @@ class LoadingScreen extends StatefulWidget {
 class _LoadingScreenState extends State<LoadingScreen>
     with SingleTickerProviderStateMixin {
   late AnimationController _animationController;
-  late Animation<double> _animation;
-  bool _hasError = false;
   late ApiService _apiService;
+  bool _hasError = false; // Definindo a variável _hasError
 
   @override
   void initState() {
@@ -30,9 +29,7 @@ class _LoadingScreenState extends State<LoadingScreen>
     _animationController = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
-    )..repeat(reverse: true);
-
-    _animation = CurvedAnimation(parent: _animationController, curve: Curves.easeInOut);
+    )..repeat();
 
     _apiService = ApiService(dotenv.env['API_KEY_RECIPE']!);
 
@@ -47,6 +44,8 @@ class _LoadingScreenState extends State<LoadingScreen>
 
   void _fetchRecipe() async {
     final prefs = Provider.of<RecipePreferences>(context, listen: false);
+
+    print('Meal Type no LoadingScreen: ${prefs.mealType}');
 
     Map<String, dynamic> requestData = {
       'occasion': prefs.occasion,
@@ -69,12 +68,9 @@ class _LoadingScreenState extends State<LoadingScreen>
 
   Widget _buildAnimation() {
     return Center(
-      child: ScaleTransition(
-        scale: _animation,
-        child: Image.asset(
-          'assets/loading_icon.png',
-          height: 100,
-        ),
+      child: CustomPaint(
+        size: const Size(100, 100),
+        painter: LoadingPainter(_animationController),
       ),
     );
   }
@@ -104,7 +100,7 @@ class _LoadingScreenState extends State<LoadingScreen>
           ElevatedButton(
             onPressed: () {
               setState(() {
-                _hasError = false;
+                _hasError = false; // Reseta o estado para tentar novamente
               });
               _fetchRecipe();
             },
@@ -141,8 +137,33 @@ class _LoadingScreenState extends State<LoadingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      backgroundColor: CustomColors.primaryColor,
       body: _buildContent(),
     );
   }
 }
+
+
+  class LoadingPainter extends CustomPainter {
+    final Animation<double> animation;
+
+    LoadingPainter(this.animation) : super(repaint: animation);
+
+    @override
+    void paint(Canvas canvas, Size size) {
+      final paint = Paint()
+        ..color = Colors.black
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 4;
+
+      final center = Offset(size.width / 2, size.height / 2);
+      final radius = size.width / 2 * animation.value;
+
+      for (int i = 0; i < 3; i++) {
+        canvas.drawCircle(center, radius * (1 - i * 0.3), paint);
+      }
+    }
+
+    @override
+    bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
+  }

@@ -1,7 +1,6 @@
-// lib/screens/personalization/meal_type_screen.dart
-
 import 'package:flutter/material.dart';
-
+import 'package:provider/provider.dart';
+import '../../models/recipe_preferences.dart';
 import '../../utils/colors.dart';
 
 class MealTypeScreen extends StatefulWidget {
@@ -103,9 +102,13 @@ class _MealTypeScreenState extends State<MealTypeScreen> {
             ),
             onPressed: selectedMealType != null
                 ? () {
-                    // Salve a seleção e navegue para a próxima tela
-                    Navigator.pushNamed(context, '/ingredients_selection');
-                  }
+              Provider.of<RecipePreferences>(context, listen: false)
+                  .updateMealType(selectedMealType!);
+
+              print('Meal Type selecionado: ${selectedMealType!}');
+
+              Navigator.pushNamed(context, '/ingredients_selection');
+            }
                 : null,
             child: const Text(
               'Próximo',

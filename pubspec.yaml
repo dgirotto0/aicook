@@ -43,6 +43,7 @@ dependencies:
   share_plus: ^10.1.1
   google_generative_ai: ^0.4.6
   flutter_dotenv: ^5.2.1
+  translator: ^1.0.2
 
 dev_dependencies:
   flutter_test:
@@ -81,6 +82,8 @@ flutter:
     - assets/icons/date.png
     - assets/icons/friends.png
     - assets/loading_icon.png
+    - assets/replace.png
+    - .env
 
 
   # An image asset can refer to one or more resolution-specific "variants", see
@@ -94,17 +97,10 @@ flutter:
   # "family" key with the font family name, and a "fonts" key with a
   # list giving the asset and other descriptors for the font. For
   # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
+  fonts:
+    - family: BubblebodyNeue
+      fonts:
+        - asset: assets/fonts/bubbleboddyneue-regular.ttf
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/to/font-from-package

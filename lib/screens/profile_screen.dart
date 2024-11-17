@@ -65,7 +65,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             textAlign: TextAlign.center,
           ),
           contentPadding: const EdgeInsets.all(20),
-          actionsAlignment: MainAxisAlignment.spaceEvenly, // Alinhamento dos botões
+          actionsAlignment: MainAxisAlignment.spaceEvenly,
           actions: [
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
@@ -112,7 +112,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-
   void _signOut() async {
     await _authService.signOut();
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
@@ -121,6 +120,58 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void _deleteAccount() async {
     // Lógica de exclusão já existente
   }
+
+  Future<void> _removeFavorite(Recipe recipe) async {
+    if (userId != null) {
+      await _dbService.removeFavoriteRecipe(userId!, recipe.name);
+      setState(() {
+        favoriteRecipes.remove(recipe);
+      });
+    }
+  }
+
+  void _showPopup(String message) {
+    final overlay = Overlay.of(context);
+    final overlayEntry = OverlayEntry(
+      builder: (context) => Positioned(
+        bottom: MediaQuery.of(context).size.height * 0.2,
+        left: MediaQuery.of(context).size.width * 0.2,
+        right: MediaQuery.of(context).size.width * 0.2,
+        child: Material(
+          color: Colors.transparent,
+          child: AnimatedOpacity(
+            opacity: 1.0,
+            duration: const Duration(milliseconds: 200),
+            child: Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.black87,
+                borderRadius: BorderRadius.circular(10),
+              ),
+              child: Text(
+                message,
+                style: const TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    // Insert the popup
+    overlay.insert(overlayEntry);
+
+    // Remove the popup after some time
+    Future.delayed(const Duration(milliseconds: 1500), () {
+      overlayEntry.remove();
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -174,41 +225,69 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 itemCount: favoriteRecipes.length,
                 itemBuilder: (context, index) {
                   final recipe = favoriteRecipes[index];
-                  return Card(
-                    elevation: 4,
-                    margin: const EdgeInsets.symmetric(vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16),
+                  return Dismissible(
+                    key: Key(recipe.name),
+                    direction: DismissDirection.startToEnd,
+                    background: Container(
+                      color: Colors.redAccent,
+                      alignment: Alignment.centerLeft,
+                      padding: const EdgeInsets.only(left: 20),
+                      child: const Icon(
+                        Icons.heart_broken,
+                        color: Colors.white,
+                        size: 32,
+                      ),
                     ),
-                    child: ListTile(
-                      contentPadding: const EdgeInsets.all(12),
-                      title: Text(
-                        recipe.name,
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18),
-                      ),
-                      subtitle: Padding(
-                        padding: const EdgeInsets.only(top: 8.0),
-                        child: Row(
-                          children: [
-                            const Icon(Icons.timer,
-                                color: CustomColors.primaryColor),
-                            const SizedBox(width: 4),
-                            Text(recipe.preparation_time),
-                          ],
+                    onDismissed: (direction) {
+                      _removeFavorite(recipe);
+                      _showPopup('Receita removida dos favoritos!');
+                    },
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => RecipeDetailScreen(recipe: recipe),
+                          ),
+                        );
+                      },
+                      child: Card(
+                        elevation: 4,
+                        margin: const EdgeInsets.symmetric(vertical: 8),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16),
                         ),
-                      ),
-                      trailing: IconButton(
-                        icon: const Icon(Icons.arrow_forward),
-                        onPressed: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  RecipeDetailScreen(recipe: recipe),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(12),
+                          title: Text(
+                            recipe.name,
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 18),
+                          ),
+                          subtitle: Padding(
+                            padding: const EdgeInsets.only(top: 8.0),
+                            child: Row(
+                              children: [
+                                const Icon(Icons.timer,
+                                    color: CustomColors.primaryColor),
+                                const SizedBox(width: 4),
+                                Text(recipe.preparation_time),
+                              ],
                             ),
-                          );
-                        },
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.arrow_forward),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      RecipeDetailScreen(recipe: recipe),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
                       ),
                     ),
                   );

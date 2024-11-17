@@ -25,8 +25,9 @@ class DatabaseService {
 
     return await openDatabase(
       path,
-      version: 1,
+      version: 2, // Atualize a versão
       onCreate: _onCreate,
+      onUpgrade: _onUpgrade,
     );
   }
 
@@ -39,12 +40,21 @@ class DatabaseService {
         name TEXT,
         preparationTime TEXT,
         ingredients TEXT,
-        instructions TEXT
+        instructions TEXT,
+        imageUrl TEXT
       )
     ''');
   }
 
-  Future<void> saveFavoriteRecipe(String userId, Recipe recipe) async {
+  Future _onUpgrade(Database db, int oldVersion, int newVersion) async {
+    if (oldVersion < 2) {
+      await db.execute('''
+        ALTER TABLE favorites ADD COLUMN imageUrl TEXT
+      ''');
+    }
+  }
+
+  Future<void> saveFavoriteRecipe(String userId, Recipe recipe, String imageUrl) async {
     final db = await database;
     await db.insert(
       'favorites',
@@ -55,6 +65,7 @@ class DatabaseService {
         'preparationTime': recipe.preparation_time,
         'ingredients': recipe.ingredients.join('|'),
         'instructions': recipe.instructions.join('|'),
+        'imageUrl': imageUrl,
       },
       conflictAlgorithm: ConflictAlgorithm.replace,
     );
@@ -74,6 +85,7 @@ class DatabaseService {
         preparation_time: maps[i]['preparationTime'],
         ingredients: maps[i]['ingredients'].split('|'),
         instructions: maps[i]['instructions'].split('|'),
+        imageUrl: maps[i]['imageUrl'], // Novo campo
       );
     });
   }
@@ -111,5 +123,4 @@ class DatabaseService {
     final result = await db.query('favorites');
     print("Conteúdo da Tabela Favorites: $result");
   }
-
 }

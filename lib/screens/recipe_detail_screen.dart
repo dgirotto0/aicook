@@ -33,10 +33,37 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     if (user != null) {
       userId = user.uid;
       isFavorite = await _dbService.isFavorite(userId!, widget.recipe.name);
-    }
 
-    recipeImageUrl = await ImageService().fetchImage(widget.recipe.name);
-    setState(() {});
+      if (isFavorite) {
+        final favoriteRecipes = await _dbService.getFavoriteRecipes(userId!);
+        final favoriteRecipe = favoriteRecipes.firstWhere((r) => r.name == widget.recipe.name);
+        setState(() {
+          recipeImageUrl = favoriteRecipe.imageUrl;
+        });
+      } else {
+        _fetchAndSetImage(widget.recipe.name);
+      }
+    } else {
+      print("Erro: usuário não autenticado");
+    }
+  }
+
+  void _fetchAndSetImage(String recipeName) async {
+    try {
+      String? imageUrl = await ImageService().fetchImage(recipeName);
+      setState(() {
+        recipeImageUrl = imageUrl;
+      });
+
+      if (isFavorite && userId != null) {
+        await _dbService.saveFavoriteRecipe(userId!, widget.recipe, imageUrl!);
+      }
+    } catch (e) {
+      print("Erro ao buscar imagem: $e");
+      setState(() {
+        recipeImageUrl = 'assets/replace.png';
+      });
+    }
   }
 
   void toggleFavorite() async {
@@ -47,7 +74,7 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
     });
 
     if (isFavorite) {
-      await _dbService.saveFavoriteRecipe(userId!, widget.recipe);
+      await _dbService.saveFavoriteRecipe(userId!, widget.recipe, recipeImageUrl!);
     } else {
       await _dbService.removeFavoriteRecipe(userId!, widget.recipe.name);
     }
@@ -109,13 +136,16 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
                       ),
                       const SizedBox(height: 10),
                       if (recipeImageUrl != null)
-                        ClipRRect(
-                          borderRadius: BorderRadius.circular(20),
-                          child: Image.network(
-                            recipeImageUrl!,
-                            fit: BoxFit.cover,
-                            height: 200,
-                            width: double.infinity,
+                        Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: Image.network(
+                              recipeImageUrl!,
+                              fit: BoxFit.cover,
+                              height: 200,
+                              width: double.infinity,
+                            ),
                           ),
                         ),
                     ],
@@ -236,7 +266,12 @@ class _RecipeDetailScreenState extends State<RecipeDetailScreen> {
         return ListTile(
           leading: CircleAvatar(
             backgroundColor: CustomColors.primaryColor,
-            child: Text('${entry.key + 1}'),
+            child: Text(
+                '${entry.key + 1}',
+              style: const TextStyle(
+                color: CustomColors.backgroundColor,
+              ),
+            ),
           ),
           title: Text(entry.value),
         );

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../../utils/colors.dart';
+import '../../models/recipe_preferences.dart'; // Adicione esta linha
 
 class OccasionScreen extends StatefulWidget {
   const OccasionScreen({super.key});
@@ -13,9 +15,9 @@ class _OccasionScreenState extends State<OccasionScreen> {
   String? selectedOccasion;
 
   final List<Map<String, String>> occasions = [
+    {'title': 'Café da manhã', 'icon': 'assets/icons/lunch.png'},
+    {'title': 'Almoço', 'icon': 'assets/icons/dessert.png'},
     {'title': 'Jantar', 'icon': 'assets/icons/dinner.png'},
-    {'title': 'Almoço', 'icon': 'assets/icons/lunch.png'},
-    {'title': 'Doce', 'icon': 'assets/icons/dessert.png'},
     {'title': 'Tanto Faz', 'icon': 'assets/icons/any.png'},
   ];
 
@@ -102,8 +104,11 @@ class _OccasionScreenState extends State<OccasionScreen> {
             ),
             onPressed: selectedOccasion != null
                 ? () {
-                    Navigator.pushNamed(context, '/people');
-                  }
+              // Atualize o RecipePreferences aqui
+              Provider.of<RecipePreferences>(context, listen: false)
+                  .updateOccasion(selectedOccasion!);
+              Navigator.pushNamed(context, '/people');
+            }
                 : null,
             child: const Text(
               'Próximo',
