@@ -14,7 +14,7 @@ class ImageService {
         final data = json.decode(response.body);
         final results = data['images'];
         if (results.isNotEmpty) {
-          return results[0]['src']; // Retorna o URL da imagem
+          return results[0]['src'];
         }
       } else {
         print('Erro ao buscar imagem: ${response.statusCode}');
