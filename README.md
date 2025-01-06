@@ -14,6 +14,10 @@ AICook is your personal kitchen assistant! 🥗 It suggests personalized recipes
 - **🔐 User Authentication**: Secure sign-in and registration with Firebase.
 - **❤️ Favorites**: Save your favorite recipes for quick access later.
 - **📱 Responsive Design**: A user-friendly interface, whether you’re on your phone, tablet, or desktop.
+- **💎 Premium User Access**: Unlock unlimited recipes by subscribing to the premium plan. Payments are securely processed via Stripe.
+- **🌓 Dark/Light Mode**: Switch between dark and light themes for a comfortable browsing experience at any time of the day.
+- **🌍 Multi-language Support**: The app is fully translated into English, Spanish, and Portuguese.
+
 
 ## 📸 Screenshots
 
@@ -43,6 +47,10 @@ AICook is your personal kitchen assistant! 🥗 It suggests personalized recipes
 7. **⏳ Loading Screen**: Watch a cool animation while your personalized recipe is being generated.
 8. **📜 Recipe Screen**: View your recipe, complete with ingredients, instructions, and an image.
 9. **❤️ Favorites**: Save recipes you like for quick access later.
+10. **💎 Premium Access**: Visit the profile section to unlock unlimited recipes by subscribing to the premium plan via Stripe.
+11. **🌓 Theme Toggle**: Switch between dark and light modes directly from the settings menu.
+12. **🌍 Language**: Change the app language to English, Spanish, or Portuguese from the profile or settings screen.
+
 
 ## 🛠️ Technologies Used
 
@@ -70,3 +78,5 @@ AICook is your personal kitchen assistant! 🥗 It suggests personalized recipes
 - **🌐 Multi-language Support**: Recipes and interface available in multiple languages.
 - **🍰 More Custom Recipes**: Expand AI capabilities to generate more diverse recipes.
 - **📊 User Analytics**: Track popular recipes and improve suggestions based on user feedback.
+- **💳 Expanded Payment Options**: Implement additional payment methods alongside Stripe for user convenience.
+
